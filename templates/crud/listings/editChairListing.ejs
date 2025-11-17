@@ -1,0 +1,129 @@
+<div class="m-[17px]">
+  <div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="mb-4 flex items-center justify-between">
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white"><%= pageTitle %></h1>
+      <a href="/listings/chairs" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Listings
+      </a>
+    </div>
+  </div>
+
+  <div class="p-6 bg-white dark:bg-gray-800">
+    <form id="editListingForm">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chair Name</label>
+          <input type="text" id="chairName" name="chairName" value="<%= listing.chairName %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Available Chairs</label>
+          <input type="number" id="availableChairs" name="availableChairs" value="<%= listing.availableChairs %>" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount</label>
+          <input type="number" id="amount" name="amount" value="<%= listing.paymentDetails?.amount || '' %>" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Unit</label>
+          <select id="unit" name="unit" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="Hourly" <%= listing.paymentDetails?.unit === 'Hourly' ? 'selected' : '' %>>Hourly</option>
+            <option value="Weekly" <%= listing.paymentDetails?.unit === 'Weekly' ? 'selected' : '' %>>Weekly</option>
+            <option value="Monthly" <%= listing.paymentDetails?.unit === 'Monthly' ? 'selected' : '' %>>Monthly</option>
+            <option value="Percentage" <%= listing.paymentDetails?.unit === 'Percentage' ? 'selected' : '' %>>Percentage</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Model</label>
+          <select id="paymentModel" name="paymentModel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="Fixed Pay" <%= listing.paymentDetails?.model === 'Fixed Pay' ? 'selected' : '' %>>Fixed Pay</option>
+            <option value="Commission Pay" <%= listing.paymentDetails?.model === 'Commission Pay' ? 'selected' : '' %>>Commission Pay</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+          <select id="status" name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option value="active" <%= listing.status === 'active' ? 'selected' : '' %>>Active</option>
+            <option value="inactive" <%= listing.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+            <option value="completed" <%= listing.status === 'completed' ? 'selected' : '' %>>Completed</option>
+          </select>
+        </div>
+
+        <div class="lg:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+          <textarea id="description" name="description" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"><%= listing.description %></textarea>
+        </div>
+      </div>
+
+      <div class="mt-6 flex gap-4">
+        <button type="submit" id="submitBtn" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+          <span id="submitText">Update Listing</span>
+          <div id="submitLoader" class="hidden ml-2">
+            <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+        </button>
+        <a href="/listings/chairs" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('editListingForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitText = document.getElementById('submitText');
+  const submitLoader = document.getElementById('submitLoader');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      chairName: document.getElementById('chairName').value,
+      availableChairs: document.getElementById('availableChairs').value,
+      amount: document.getElementById('amount').value,
+      unit: document.getElementById('unit').value,
+      paymentModel: document.getElementById('paymentModel').value,
+      status: document.getElementById('status').value,
+      description: document.getElementById('description').value
+    };
+
+    submitBtn.disabled = true;
+    submitText.classList.add('hidden');
+    submitLoader.classList.remove('hidden');
+
+    try {
+      const response = await fetch('/listings/chairs/update/<%= listing._id %>', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.status) {
+        window.location.href = '/listings/chairs/view/<%= listing._id %>';
+      } else {
+        alert(data.message || 'Error updating listing');
+        submitBtn.disabled = false;
+        submitText.classList.remove('hidden');
+        submitLoader.classList.add('hidden');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while updating the listing');
+      submitBtn.disabled = false;
+      submitText.classList.remove('hidden');
+      submitLoader.classList.add('hidden');
+    }
+  });
+</script>

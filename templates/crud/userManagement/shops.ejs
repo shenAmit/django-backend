@@ -1,0 +1,1284 @@
+<div class="m-[17px]">
+  <div
+    class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700"
+  >
+    <div class="w-full mb-1">
+      <div class="mb-4">
+        <h1
+          class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
+        >
+          <%= pageTitle %>
+        </h1>
+      </div>
+      <div class="sm:flex">
+        <div
+          class="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700"
+        >
+          <form class="lg:pr-3" method="GET">
+            <label for="users-search" class="sr-only">Search</label>
+            <div class="relative mt-1 lg:w-64 xl:w-96 flex gap-4">
+              <input
+                type="text"
+                name="search"
+                id="search"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Search by name or email"
+                value="<%= search || '' %>"
+              />
+              <button
+                class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="inline-block min-w-full align-middle">
+        <div class="overflow-hidden shadow">
+          <table
+            class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600"
+          >
+            <thead class="bg-gray-100 dark:bg-gray-700">
+              <tr>
+                <th
+                  scope="col"
+                  class="p-4 whitespace-nowrap text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  S No.
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Profile
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Name
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Email
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Shop Type
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Status
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Joined At
+                </th>
+                <th
+                  scope="col"
+                  class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700"
+            >
+              <% if (users.length === 0) { %>
+              <tr>
+                <td
+                  colspan="8"
+                  class="p-4 text-center text-gray-500 dark:text-gray-400"
+                >
+                  No shop users found.
+                </td>
+              </tr>
+              <% } else { %> <% for (let i = 0; i < users.length; i++) { %> <%
+              const user = users[i]; %>
+              <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <%= ((pagination.perPage * (pagination.currentPage - 1)) + i +
+                  1) %>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <div class="flex items-center">
+                    <% if (user.profilePicture) { %>
+                    <img
+                      class="w-8 h-8 rounded-full"
+                      src="<%= user.profilePicture %>"
+                      alt="<%= user.name %>"
+                      onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkMxNC4yMDkxIDEyIDE2IDEwLjIwOTEgMTYgOEMxNiA1Ljc5MDg2IDE0LjIwOTEgNCAxMiA0QzkuNzkwODYgNCA4IDUuNzkwODYgOCA4QzggMTAuMjA5MSA5Ljc5MDg2IDEyIDEyIDEyWiIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJNMTIgMTRDOC42ODYyOSAxNCA2IDE2LjY4NjMgNiAyMEgxOEMxOCAxNi42ODYzIDE1LjMxMzcgMTQgMTIgMTRaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo8L3N2Zz4K'; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    />
+                    <div
+                      class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
+                      style="display: none"
+                    >
+                      <span class="text-gray-600 text-xs font-medium">
+                        <%= user.name ? user.name.charAt(0).toUpperCase() : 'U'
+                        %>
+                      </span>
+                    </div>
+                    <% } else { %>
+                    <div
+                      class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
+                    >
+                      <span class="text-gray-600 text-xs font-medium">
+                        <%= user.name ? user.name.charAt(0).toUpperCase() : 'U'
+                        %>
+                      </span>
+                    </div>
+                    <% } %>
+                  </div>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <%= user.name || 'N/A' %>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <%= user.email %>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <% if (user.shop_type && user.shop_type.name) { %>
+                  <span
+                    class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20"
+                  >
+                    <%= user.shop_type.name %>
+                  </span>
+                  <% } else { %>
+                  <span class="text-gray-400">No shop type</span>
+                  <% } %>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <% if (user.isBlock) { %>
+                  <span
+                    class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20"
+                  >
+                    Blocked
+                  </span>
+                  <% } else { %>
+                  <span
+                    class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20"
+                  >
+                    Active
+                  </span>
+                  <% } %>
+                </td>
+                <td class="p-4 text-sm text-gray-900 dark:text-white">
+                  <%= user.createdAt.toLocaleDateString('en-US', { year:
+                  'numeric', month: '2-digit', day: '2-digit', }) %>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      class="view-user-btn text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="View User Details"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        ></path>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <% if (user.isBlock) { %>
+                    <button
+                      type="button"
+                      class="unblock-user-btn text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="Unblock User"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <% } else { %>
+                    <button
+                      type="button"
+                      class="block-user-btn text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="Block User"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
+                        ></path>
+                      </svg>
+                    </button>
+                    <% } %>
+                    <button
+                      type="button"
+                      class="edit-user-btn text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="Edit User"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="edit-hours-btn text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="Edit Operation Hours"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="delete-user-btn text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                      data-id="<%= user._id %>"
+                      data-name="<%= user.name %>"
+                      title="Delete User"
+                    >
+                      <svg
+                        class="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <% } %> <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('../components/pagination', { pagination, search, query,
+  queryString }) %>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteUserModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div
+    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay with blur effect -->
+    <div
+      class="fixed inset-0 transition-all duration-300 bg-gray-500 bg-opacity-75 backdrop-blur-sm modal-backdrop"
+    ></div>
+
+    <!-- Modal panel -->
+    <div
+      class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg dark:bg-gray-800 modal-content"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          Delete User
+        </h3>
+        <button
+          type="button"
+          class="modal-close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Are you sure you want to delete the user "<span
+            id="deleteUserName"
+            class="font-medium"
+          ></span
+          >"? This action cannot be undone.
+        </p>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 modal-close"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="confirmDeleteUser"
+          class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span class="delete-btn-text">Delete</span>
+          <span class="delete-btn-loader hidden inline-flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Deleting...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal animations and blur effects */
+  #deleteUserModal {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Enhanced backdrop blur */
+  .modal-backdrop {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+</style>
+
+<!-- View User Modal (Read-Only) -->
+<div id="viewUserModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div
+    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay with blur effect -->
+    <div
+      class="fixed inset-0 transition-all duration-300 bg-gray-500 bg-opacity-75 backdrop-blur-sm modal-backdrop"
+    ></div>
+
+    <!-- Modal panel -->
+    <div
+      class="inline-block w-full max-w-3xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg dark:bg-gray-800 modal-content max-h-[90vh] overflow-y-auto"
+    >
+      <div
+        class="flex items-center justify-between mb-4 sticky top-0 bg-white dark:bg-gray-800 pb-4 border-b dark:border-gray-700"
+      >
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          Shop User Details
+        </h3>
+        <button
+          type="button"
+          class="modal-close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Profile Picture Section -->
+        <div class="flex justify-center">
+          <img
+            id="viewUserProfilePicture"
+            src="/images/default-avatar.svg"
+            alt="Profile Picture"
+            class="w-32 h-32 rounded-full object-cover border-4 border-gray-300 dark:border-gray-600"
+            onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjY0IiBjeT0iNjQiIHI9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+Cjxwb2x5Z29uIHBvaW50cz0iNjQsMzIgNzIsNDggNTYsNDgiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTY0IDY0QzY5LjUyMjggNjQgNzQgNTkuNTIyOCA3NCA1NEM3NCA0OC40NzcyIDY5LjUyMjggNDQgNjQgNDRDNTguNDc3MiA0NCA1NCA0OC40NzcyIDU0IDU0QzU0IDU5LjUyMjggNTguNDc3MiA2NCA2NCA2NFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTY0IDcyQzUzLjUwNjYgNzIgNDUgODAuNTA2NiA0NSA5MUg4M0M4MyA4MC41MDY2IDc0LjQ5MzQgNzIgNjQgNzJaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPg==';"
+          />
+        </div>
+
+        <!-- Basic Information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Name</label
+            >
+            <p
+              id="viewUserName"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            ></p>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Email</label
+            >
+            <p
+              id="viewUserEmail"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            ></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Phone</label
+            >
+            <p
+              id="viewUserPhone"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            ></p>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Role</label
+            >
+            <p
+              id="viewUserRole"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            ></p>
+          </div>
+        </div>
+
+        <!-- Shop Information -->
+        <div class="border-t pt-4 dark:border-gray-700">
+          <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">
+            Shop Information
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Shop Type</label
+              >
+              <p
+                id="viewUserShopType"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Average Rating</label
+              >
+              <p
+                id="viewUserRating"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Shop Services</label
+            >
+            <div
+              id="viewUserServices"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white min-h-[40px]"
+            ></div>
+          </div>
+
+          <div class="mt-4">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >Shop Amenities</label
+            >
+            <div
+              id="viewUserAmenities"
+              class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white min-h-[40px]"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Shop Address -->
+        <div class="border-t pt-4 dark:border-gray-700">
+          <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">
+            Shop Address
+          </h4>
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Address</label
+              >
+              <p
+                id="viewUserAddress"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >Latitude</label
+                >
+                <p
+                  id="viewUserLatitude"
+                  class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                ></p>
+              </div>
+              <div>
+                <label
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >Longitude</label
+                >
+                <p
+                  id="viewUserLongitude"
+                  class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                ></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operation Hours -->
+        <div class="border-t pt-4 dark:border-gray-700">
+          <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">
+            Operation Hours
+          </h4>
+          <div id="viewOperationHours" class="space-y-2">
+            <!-- Operation hours will be populated here -->
+          </div>
+        </div>
+
+        <!-- Status & Dates -->
+        <div class="border-t pt-4 dark:border-gray-700">
+          <h4 class="text-md font-medium text-gray-900 dark:text-white mb-4">
+            Status & Information
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Account Status</label
+              >
+              <p
+                id="viewUserStatus"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Availability</label
+              >
+              <p
+                id="viewUserAvailability"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >Joined Date</label
+              >
+              <p
+                id="viewUserJoinedDate"
+                class="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-700">
+        <button
+          type="button"
+          class="modal-close px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Operation Hours Edit Modal -->
+<div id="editHoursModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div
+    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay with blur effect -->
+    <div
+      class="fixed inset-0 transition-all duration-300 bg-black bg-opacity-60 backdrop-blur-md modal-backdrop"
+    ></div>
+
+    <!-- Modal panel -->
+    <div
+      class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white border-2 border-gray-200 shadow-2xl rounded-xl dark:bg-gray-800 dark:border-gray-600 modal-content"
+    >
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          Edit Operation Hours -
+          <span id="editHoursUserName" class="font-semibold"></span>
+        </h3>
+        <button
+          type="button"
+          class="modal-close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="editHoursForm" class="space-y-4">
+        <!-- Monday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="monday_is_open"
+              name="monday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="monday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Monday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="monday_opening_time"
+              name="monday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="monday_closing_time"
+              name="monday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Tuesday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="tuesday_is_open"
+              name="tuesday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="tuesday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Tuesday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="tuesday_opening_time"
+              name="tuesday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="tuesday_closing_time"
+              name="tuesday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Wednesday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="wednesday_is_open"
+              name="wednesday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="wednesday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Wednesday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="wednesday_opening_time"
+              name="wednesday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="wednesday_closing_time"
+              name="wednesday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Thursday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="thursday_is_open"
+              name="thursday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="thursday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Thursday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="thursday_opening_time"
+              name="thursday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="thursday_closing_time"
+              name="thursday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Friday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="friday_is_open"
+              name="friday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="friday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Friday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="friday_opening_time"
+              name="friday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="friday_closing_time"
+              name="friday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Saturday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="saturday_is_open"
+              name="saturday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="saturday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Saturday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="saturday_opening_time"
+              name="saturday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="saturday_closing_time"
+              name="saturday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Sunday -->
+        <div
+          class="flex items-center justify-between p-4 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="sunday_is_open"
+              name="sunday_is_open"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label
+              for="sunday_is_open"
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 w-20"
+              >Sunday</label
+            >
+          </div>
+          <div class="flex items-center space-x-2">
+            <input
+              type="time"
+              id="sunday_opening_time"
+              name="sunday_opening_time"
+              value="09:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+            <span class="text-gray-500 dark:text-gray-400 text-sm">to</span>
+            <input
+              type="time"
+              id="sunday_closing_time"
+              name="sunday_closing_time"
+              value="18:00"
+              class="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm bg-white dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <!-- Error Display -->
+        <div
+          id="hoursError"
+          class="hidden p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md dark:bg-red-900/20 dark:border-red-800 dark:text-red-400"
+        ></div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-3 pt-4">
+          <button
+            type="button"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-700"
+            onclick="closeHoursModal()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            id="confirmEditHours"
+            class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            <span id="hoursSubmitText">Update Hours</span>
+            <div id="hoursSubmitLoader" class="hidden inline-block ml-2">
+              <svg
+                class="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div id="editUserModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div
+    class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0"
+  >
+    <!-- Background overlay with blur effect -->
+    <div
+      class="fixed inset-0 transition-all duration-300 bg-gray-500 bg-opacity-75 backdrop-blur-sm modal-backdrop"
+    ></div>
+
+    <!-- Modal panel -->
+    <div
+      class="inline-block w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg dark:bg-gray-800 modal-content"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          Edit User
+        </h3>
+        <button
+          type="button"
+          class="modal-close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="editUserForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label
+              for="editUserName"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="editUserName"
+              name="name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              required
+            />
+            <div
+              id="editNameError"
+              class="text-red-600 text-sm mt-1 hidden"
+            ></div>
+          </div>
+
+          <div>
+            <label
+              for="editUserEmail"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="editUserEmail"
+              name="email"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-400 cursor-not-allowed"
+              readonly
+              disabled
+            />
+            <div
+              id="editEmailError"
+              class="text-red-600 text-sm mt-1 hidden"
+            ></div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label
+            for="editUserProfileImage"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Profile Image
+          </label>
+          <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <img
+                id="editUserProfilePreview"
+                src="/images/default-avatar.svg"
+                alt="Profile Preview"
+                class="w-16 h-16 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
+                onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTAuMjA5MSAxNiA4QzE2IDUuNzkwODYgMTQuMjA5MSA0IDEyIDRDOS43OTA4NiA0IDggNS43OTA4NiA4IDhDOCAxMC4yMDkxIDkuNzkwODYgMTIgMTIgMTJaIiBmaWxsPSIjOUNBM0FGIi8+CjxwYXRoIGQ9Ik0xMiAxNEM4LjY4NjI5IDE0IDYgMTYuNjg2MyA2IDIwSDE4QzE4IDE2LjY4NjMgMTUuMzEzNyAxNCAxMiAxNFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+Cjwvc3ZnPgo=';"
+              />
+            </div>
+            <div class="flex-1">
+              <input
+                type="file"
+                id="editUserProfileImage"
+                name="profilePicture"
+                accept="image/*"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-600 dark:file:text-gray-300"
+              />
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                JPG, PNG, GIF up to 2MB
+              </p>
+            </div>
+          </div>
+          <div
+            id="editProfileImageError"
+            class="text-red-600 text-sm mt-1 hidden"
+          ></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label
+              for="editUserRole"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Role
+            </label>
+            <select
+              id="editUserRole"
+              name="roles"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-400 cursor-not-allowed"
+              readonly
+              disabled
+            >
+              <option value="">Select Role</option>
+            </select>
+            <div
+              id="editRoleError"
+              class="text-red-600 text-sm mt-1 hidden"
+            ></div>
+          </div>
+
+          <div id="shopTypeField" class="hidden">
+            <label
+              for="editUserShopType"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Shop Type
+            </label>
+            <select
+              id="editUserShopType"
+              name="shop_type"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+              <option value="">Select Shop Type</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          id="professionalFields"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 hidden"
+        >
+          <div>
+            <label
+              for="editUserProfession"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Profession
+            </label>
+            <input
+              type="text"
+              id="editUserProfession"
+              name="profession"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label
+              for="editUserPhone"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Professional Phone
+            </label>
+            <input
+              type="tel"
+              id="editUserPhone"
+              name="professional_phone"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="flex items-center">
+            <input
+              type="checkbox"
+              id="editUserIsBlock"
+              name="isBlock"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <span
+              class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Block User
+            </span>
+          </label>
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            class="modal-close px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            id="confirmEditUser"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span id="editSubmitText">Update User</span>
+            <div id="editSubmitLoader" class="hidden inline-block ml-2">
+              <svg
+                class="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

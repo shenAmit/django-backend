@@ -1,0 +1,121 @@
+<!-- components/deleteModal.ejs -->
+<!-- Delete Confirmation Modal -->
+<div id="<%= modalId %>" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+    <!-- Background overlay with blur effect -->
+    <div class="fixed inset-0 transition-all duration-300 bg-gray-500 bg-opacity-75 backdrop-blur-sm modal-backdrop"></div>
+
+    <!-- Modal panel -->
+    <div class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg dark:bg-gray-800 modal-content">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+          Delete <%= itemType ? itemType.charAt(0).toUpperCase() + itemType.slice(1) : "Item" %>
+        </h3>
+        <button type="button" class="modal-close text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Are you sure you want to delete the <%= itemType || "item" %> "<span id="delete<%= itemType ? itemType.charAt(0).toUpperCase() + itemType.slice(1) : 'Item' %>Name" class="font-medium"></span>"? This action cannot be undone.
+        </p>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 modal-close"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="confirmDelete<%= itemType ? itemType.charAt(0).toUpperCase() + itemType.slice(1) : 'Item' %>"
+          class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span class="delete-btn-text">Delete</span>
+          <span class="delete-btn-loader hidden inline-flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Deleting...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal animations and blur effects */
+  #<%= modalId %> {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("<%= modalId %>");
+    const deleteBtn = document.getElementById("confirmDelete<%= itemType ? itemType.charAt(0).toUpperCase() + itemType.slice(1) : 'Item' %>");
+    
+    function resetDeleteButton() {
+      if (deleteBtn) {
+        const btnText = deleteBtn.querySelector(".delete-btn-text");
+        const btnLoader = deleteBtn.querySelector(".delete-btn-loader");
+        if (btnText) btnText.classList.remove("hidden");
+        if (btnLoader) btnLoader.classList.add("hidden");
+        deleteBtn.disabled = false;
+        deleteBtn.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+      // Reset global delete state
+      if (typeof window !== 'undefined' && window.isDeleting !== undefined) {
+        window.isDeleting = false;
+      }
+    }
+
+    // Close modal when clicking backdrop
+    document.querySelectorAll("#<%= modalId %> .modal-backdrop").forEach((backdrop) => {
+      backdrop.addEventListener("click", function () {
+        modal.classList.add("hidden");
+        resetDeleteButton();
+      });
+    });
+
+    // Close modal when clicking close button
+    document.querySelectorAll("#<%= modalId %> .modal-close").forEach((closeBtn) => {
+      closeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        modal.classList.add("hidden");
+        resetDeleteButton();
+      });
+    });
+
+    // Prevent modal from closing when clicking inside modal content
+    document.querySelectorAll("#<%= modalId %> .modal-content").forEach((content) => {
+      content.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+    });
+  });
+</script>

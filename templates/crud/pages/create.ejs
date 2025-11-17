@@ -1,0 +1,106 @@
+<div class="m-[17px]">
+    <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+      <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
+          <%= oldData?.id ? 'Edit Page' : 'Add Page' %>
+        </h1>
+      </div>
+    </div>
+  
+    <div class="flex flex-col">
+      <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+          <div class="overflow-visible shadow">
+            <div class="p-6 space-y-6 dark:bg-gray-800">
+              <% const fieldError = (fieldName) => {
+                const err = errors?.find(e => e.path === fieldName);
+                return err ? err.msg : null;
+              }; %>
+  
+              <form action="/save-page" method="POST" enctype="multipart/form-data">
+                <% if (oldData?.id) { %>
+                  <input type="hidden" name="_method" value="PUT" />
+                  <input type="hidden" name="id" value="<%= oldData.id %>" />
+                <% } %>
+  
+                <div class="grid grid-cols-6 gap-4">
+                  <!-- Title -->
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Title
+                      <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="title" id="title"
+                      class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                        focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700
+                        dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                      placeholder="Type Title" required value="<%= oldData?.title || '' %>" />
+                    <% if (fieldError('title')) { %>
+                      <p class="text-red-500 text-xs mt-1"><%= fieldError('title') %></p>
+                    <% } %>
+                  </div>
+  
+                  <!-- Slug -->
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="slug" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slug</label>
+                    <input type="text" name="slug" id="slug"
+                      class="shadow-sm bg-gray-200 cursor-not-allowed border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                        focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700
+                        dark:border-gray-600 dark:text-white"
+                      readonly value="<%= oldData?.slug || '' %>" />
+                    <% if (fieldError('slug')) { %>
+                      <p class="text-red-500 text-xs mt-1"><%= fieldError('slug') %></p>
+                    <% } %>
+                  </div>
+  
+                  <!-- Status -->
+                  <div class="col-span-6 sm:col-span-3 mb-4">
+                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                    <select id="status" name="status"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                        focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700
+                        dark:border-gray-600 dark:text-white"
+                      required>
+                      <option value="true" <%= oldData?.status == 1 ? 'selected' : '' %>>Active</option>
+                      <option value="false" <%= oldData?.status == 0 ? 'selected' : '' %>>Inactive</option>
+                    </select>
+                  </div>
+                </div>
+  
+                <!-- Content -->
+                <div class="col-span-12">
+                  <label for="content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Page Content</label>
+                  <div id="editor"
+                    class="min-h-[300px] shadow-sm bg-white border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                      focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800
+                      dark:border-gray-600 dark:text-white">
+                    <%- oldData?.content || '' %>
+                  </div>
+                  <input type="hidden" name="content" id="editor_content" />
+                  <% if (fieldError('content')) { %>
+                    <p class="text-red-500 text-xs mt-1"><%= fieldError('content') %></p>
+                  <% } %>
+                </div>
+  
+                <!-- Submit Button -->
+                <div class="items-center pt-6 mt-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-end gap-2">
+                  <a href="/pages"
+                      class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-300 dark:focus:ring-red-800">
+                    Go Back
+                  </a>
+                  <button type="submit"
+                    class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300
+                      font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700
+                      dark:focus:ring-primary-800">
+                    <%= oldData?.id ? 'Update' : 'Submit' %>
+                  </button>
+                </div>
+              </form>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

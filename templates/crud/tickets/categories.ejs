@@ -1,0 +1,507 @@
+<div class="m-[17px]">
+  <div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="mb-4 flex items-center justify-between">
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white"><%= pageTitle %></h1>
+      <button
+        type="button"
+        onclick="openCreateModal()"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Category
+      </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-row gap-4 mb-4">
+      <div class="md:w-80">
+        <input
+          type="text"
+          id="searchInput"
+          value="<%= search %>"
+          placeholder="Search categories..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
+      </div>
+      <div class="md:w-48">
+        <select
+          id="statusFilter"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
+          <option value="">All Status</option>
+          <option value="true" <%= status === 'true' ? 'selected' : '' %>>Active</option>
+          <option value="false" <%= status === 'false' ? 'selected' : '' %>>Inactive</option>
+        </select>
+      </div>
+      <div>
+        <button
+          type="button"
+          onclick="applyFilters()"
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+        >
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-50 dark:bg-gray-800">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">S No</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Created At</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+        <% if (categories && categories.length > 0) { %>
+          <% categories.forEach(function(category, index) { %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                <%= (pagination.currentPage - 1) * pagination.perPage + index + 1 %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                <%= category.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if (category.status) { %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+                <% } else { %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactive</span>
+                <% } %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= new Date(category.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                <button
+                  onclick="openEditModal(this)"
+                  data-category-id="<%= category._id %>"
+                  data-category-name="<%= category.name %>"
+                  data-category-status="<%= category.status %>"
+                  class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400"
+                >
+                  Edit
+                </button>
+                <button
+                  onclick="deleteCategory('<%= category._id %>')"
+                  class="text-red-600 hover:text-red-900 dark:text-red-400"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No categories found
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <% if (pagination.lastPage > 1) { %>
+    <%- include('../../components/pagination', { pagination: pagination }) %>
+  <% } %>
+</div>
+
+<!-- Create/Edit Modal -->
+<div id="categoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+    <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm modal-backdrop" onclick="closeModal()"></div>
+    
+    <div class="relative inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-800 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-content">
+      <form id="categoryForm" onsubmit="handleSubmit(event)">
+        <div class="px-6 pt-6 pb-4 bg-white dark:bg-gray-800">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="modalTitle">
+              Add Category
+            </h3>
+            <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <input type="hidden" id="categoryId" name="id" />
+          
+          <div class="mb-5">
+            <label for="categoryName" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+              Category Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="categoryName"
+              name="name"
+              required
+              placeholder="Enter category name"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label for="categoryStatus" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+              Status
+            </label>
+            <select
+              id="categoryStatus"
+              name="status"
+              class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end space-x-3">
+          <button
+            type="button"
+            onclick="closeModal()"
+            class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-500 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            id="submitBtn"
+            class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+    <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+    
+    <div class="relative inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-800 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-content">
+      <div class="px-6 pt-6 pb-4 bg-white dark:bg-gray-800">
+        <div class="flex items-start">
+          <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10 dark:bg-red-900">
+            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+          </div>
+          <div class="mt-0 ml-4 text-left sm:mt-0">
+            <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
+              Delete Category
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete this category? This action cannot be undone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 flex justify-end space-x-3">
+        <button
+          type="button"
+          onclick="closeDeleteModal()"
+          class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-500 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          id="confirmDeleteBtn"
+          onclick="confirmDelete()"
+          class="px-5 py-2.5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed top-5 right-5 z-[60] hidden">
+  <div class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div id="toastIcon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg">
+      <!-- Icon will be inserted here -->
+    </div>
+    <div id="toastMessage" class="ml-3 text-sm font-normal"></div>
+    <button type="button" onclick="hideToast()" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+      <span class="sr-only">Close</span>
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Modal animations */
+  .modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+  }
+  
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  /* Toast animation */
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  #toast.show {
+    display: block;
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  #toast.hide {
+    animation: slideOutRight 0.3s ease-in;
+  }
+</style>
+
+<script>
+  let isEditMode = false;
+  let categoryToDelete = null;
+
+  // Toast notification function
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastIcon = document.getElementById('toastIcon');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    // Set message
+    toastMessage.textContent = message;
+    
+    // Set icon based on type
+    if (type === 'success') {
+      toastIcon.innerHTML = `
+        <svg class="w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      `;
+      toastIcon.className = 'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200';
+    } else if (type === 'error') {
+      toastIcon.innerHTML = `
+        <svg class="w-5 h-5 text-red-500 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      `;
+      toastIcon.className = 'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200';
+    } else if (type === 'warning') {
+      toastIcon.innerHTML = `
+        <svg class="w-5 h-5 text-orange-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+      `;
+      toastIcon.className = 'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-orange-500 bg-orange-100 rounded-lg dark:bg-orange-700 dark:text-orange-200';
+    }
+    
+    // Show toast
+    toast.classList.remove('hidden');
+    toast.classList.add('show');
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+      hideToast();
+    }, 5000);
+  }
+  
+  function hideToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('hide');
+    setTimeout(() => {
+      toast.classList.remove('show', 'hide');
+      toast.classList.add('hidden');
+    }, 300);
+  }
+
+  // Allow Enter key to trigger search
+  document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      applyFilters();
+    }
+  });
+
+  function applyFilters() {
+    const search = document.getElementById('searchInput').value;
+    const status = document.getElementById('statusFilter').value;
+    const url = new URL(window.location);
+    
+    if (search) {
+      url.searchParams.set('search', search);
+    } else {
+      url.searchParams.delete('search');
+    }
+    
+    if (status) {
+      url.searchParams.set('status', status);
+    } else {
+      url.searchParams.delete('status');
+    }
+    
+    url.searchParams.set('page', '1');
+    window.location.href = url.toString();
+  }
+
+  function openCreateModal() {
+    isEditMode = false;
+    document.getElementById('modalTitle').textContent = 'Add Category';
+    document.getElementById('categoryForm').reset();
+    document.getElementById('categoryId').value = '';
+    document.getElementById('categoryModal').classList.remove('hidden');
+  }
+
+  function openEditModal(button) {
+    isEditMode = true;
+    document.getElementById('modalTitle').textContent = 'Edit Category';
+    document.getElementById('categoryId').value = button.dataset.categoryId;
+    document.getElementById('categoryName').value = button.dataset.categoryName;
+    document.getElementById('categoryStatus').value = button.dataset.categoryStatus;
+    document.getElementById('categoryModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('categoryModal').classList.add('hidden');
+    document.getElementById('categoryForm').reset();
+  }
+
+  function openDeleteModal(id) {
+    categoryToDelete = id;
+    document.getElementById('deleteModal').classList.remove('hidden');
+  }
+
+  function closeDeleteModal() {
+    categoryToDelete = null;
+    document.getElementById('deleteModal').classList.add('hidden');
+  }
+
+  async function confirmDelete() {
+    if (!categoryToDelete) return;
+
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    confirmDeleteBtn.disabled = true;
+    confirmDeleteBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Deleting...';
+
+    try {
+      const response = await fetch(`/tickets/categories/delete/${categoryToDelete}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        closeDeleteModal();
+        showToast(result.message || 'Category deleted successfully', 'success');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        closeDeleteModal();
+        showToast(result.message || 'Error deleting category', 'error');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      closeDeleteModal();
+      showToast('An error occurred while deleting the category', 'error');
+    }
+  }
+
+  async function deleteCategory(id) {
+    openDeleteModal(id);
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const formData = new FormData(event.target);
+    const categoryId = document.getElementById('categoryId').value;
+    
+    const data = {
+      name: formData.get('name'),
+      status: formData.get('status')
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Saving...';
+
+    try {
+      const url = isEditMode 
+        ? `/tickets/categories/update/${categoryId}`
+        : '/tickets/categories/create';
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        showToast(result.message || 'Category saved successfully', 'success');
+        closeModal();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
+        showToast(result.message || 'Error saving category', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showToast('An error occurred while saving the category', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Save';
+    }
+  }
+</script>

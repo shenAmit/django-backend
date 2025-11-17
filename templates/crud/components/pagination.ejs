@@ -1,0 +1,44 @@
+<% if (pagination.lastPage > 1) { %>
+  <div
+    class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-gray-800 dark:border-gray-700">
+    
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center justify-center gap-2">
+        
+        <% if (pagination.currentPage > 1) { %>
+          <a href="?<%= queryString({ ...query, page: pagination.currentPage - 1 }) %>"
+             class="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">
+            Prev
+          </a>
+        <% } %>
+
+        <% const totalPages = pagination.lastPage; %>
+        <% const current = pagination.currentPage; %>
+        <% const delta = 1; %>
+        <% const range = []; let l; %>
+
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <% if (i === 1 || i === totalPages || (i >= current - delta && i <= current + delta)) { %>
+            <% if (l && i - l !== 1) { %>
+              <span class="px-2 dark:text-white">...</span>
+            <% } %>
+            <a href="?<%= queryString({ ...query, page: i }) %>"
+               class="px-3 py-1 text-sm rounded <%= i === current ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300' %>">
+              <%= i %>
+            </a>
+            <% l = i; %>
+          <% } %>
+        <% } %>
+
+        <% if (pagination.hasMorePages) { %>
+          <a href="?<%= queryString({ ...query, page: pagination.currentPage + 1 }) %>"
+             class="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">
+            Next
+          </a>
+        <% } %>
+        
+      </div>
+    </div>
+
+  </div>
+<% } %>

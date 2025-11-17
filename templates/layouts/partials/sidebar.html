@@ -1,0 +1,740 @@
+{% load static %}
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width"
+  aria-label="Sidebar"
+>
+  <div
+    class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+  >
+    <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
+      <div
+        class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700"
+      >
+        <ul class="pb-2 space-y-2">
+          {% if show_all_menus or user.is_staff %}
+            <li>
+              <a
+                href="/"
+                class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path == '/' %}bg-gray-100 dark:bg-gray-700{% endif %}"
+              >
+                <svg
+                  class="w-6 h-6 text-gray-800 dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11 0h7v7h-7v-7zm0-11h7v7h-7V3z"
+                  />
+                </svg>
+
+                <span class="ml-3" sidebar-toggle-item>Overview</span>
+              </a>
+            </li>
+            {% endif %}
+
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <button
+                type="button"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                aria-controls="role-and-permission"
+                data-collapse-toggle="role-and-permission"
+                aria-expanded="false"
+              >
+                <svg
+                  class="flex-shrink-0 w-6 h-6 text-gray-900 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    d="M.99 5.24A2.25 2.25 0 013.25 3h13.5A2.25 2.25 0 0119 5.25l.01 9.5A2.25 2.25 0 0116.76 17H3.26A2.267 2.267 0 011 14.74l-.01-9.5zm8.26 9.52v-.625a.75.75 0 00-.75-.75H3.25a.75.75 0 00-.75.75v.615c0 .414.336.75.75.75h5.373a.75.75 0 00.627-.74zm1.5 0a.75.75 0 00.627.74h5.373a.75.75 0 00.75-.75v-.615a.75.75 0 00-.75-.75H11.5a.75.75 0 00-.75.75v.625zm6.75-3.63v-.625a.75.75 0 00-.75-.75H11.5a.75.75 0 00-.75.75v.625c0 .414.336.75.75.75h5.25a.75.75 0 00.75-.75zm-8.25 0v-.625a.75.75 0 00-.75-.75H3.25a.75.75 0 00-.75.75v.625c0 .414.336.75.75.75H8.5a.75.75 0 00.75-.75zM17.5 7.5v-.625a.75.75 0 00-.75-.75H11.5a.75.75 0 00-.75.75V7.5c0 .414.336.75.75.75h5.25a.75.75 0 00.75-.75zm-8.25 0v-.625a.75.75 0 00-.75-.75H3.25a.75.75 0 00-.75.75V7.5c0 .414.336.75.75.75H8.5a.75.75 0 00.75-.75z"
+                  ></path>
+                </svg>
+
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  sidebar-toggle-item
+                >
+                  Role Permission
+                </span>
+                <svg
+                  sidebar-toggle-item
+                  class="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <ul
+                id="role-and-permission"
+                class="space-y-2 py-2 {% if not show_all_menus and current_path|slice:":7" != "/roles" and current_path|slice:":12" != "/permissions" %}hidden{% endif %}"
+              >
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/roles"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":6" == "/roles" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    Role
+                  </a>
+                </li>
+                {% endif %}
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/permissions"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":12" == "/permissions" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 15v2m0 0a2 2 0 104 0v-2a2 2 0 10-4 0zM4 7V5a2 2 0 012-2h2a2 2 0 012 2v2M4 7h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"
+                      />
+                    </svg>
+                    Permission
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+            </li>
+            {% endif %}
+
+            <!-- Master Table Section -->
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <button
+                type="button"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                aria-controls="master-table"
+                data-collapse-toggle="master-table"
+                aria-expanded="false"
+              >
+                <svg
+                  class="flex-shrink-0 w-6 h-6 text-gray-900 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                    d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  ></path>
+                </svg>
+
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  sidebar-toggle-item
+                >
+                  Master Table
+                </span>
+                <svg
+                  sidebar-toggle-item
+                  class="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <ul
+                id="master-table"
+                class="space-y-2 py-2 {% if not show_all_menus and current_path|slice:":11" != "/shop-types" and current_path|slice:":10" != "/amenities" and current_path|slice:":12" != "/professions" and current_path|slice:":9" != "/services" and current_path|slice:":20" != "/professional-skills" %}hidden{% endif %}"
+              >
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/shop-types"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":11" == "/shop-types" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                    Shop Type
+                  </a>
+                </li>
+                {% endif %}
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/amenities"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":10" == "/amenities" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                      />
+                    </svg>
+                    Amenities
+                  </a>
+                </li>
+                {% endif %}
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/professions"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":12" == "/professions" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Professions
+                  </a>
+                </li>
+                {% endif %}
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/services"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":9" == "/services" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Services
+                  </a>
+                </li>
+                {% endif %}
+                {% if show_all_menus or user.is_staff %}
+                <li>
+                  <a
+                    href="/professional-skills"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":20" == "/professional-skills" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                    Professional Skills
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+            </li>
+            {% endif %}
+
+            <!-- User Management Section -->
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <button
+                type="button"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                aria-controls="user-management"
+                data-collapse-toggle="user-management"
+                aria-expanded="false"
+              >
+                <svg
+                  class="flex-shrink-0 w-6 h-6 text-gray-900 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                  ></path>
+                </svg>
+
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  sidebar-toggle-item
+                >
+                  User Management
+                </span>
+                <svg
+                  sidebar-toggle-item
+                  class="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <ul
+                id="user-management"
+                class="space-y-2 py-2 {% if not show_all_menus and current_path|slice:":18" != "/user-management" %}hidden{% endif %}"
+              >
+                <li>
+                  <a
+                    href="/user-management/all-users"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":28" == "/user-management/all-users" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                      />
+                    </svg>
+                    All Users
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/user-management/professionals"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":33" == "/user-management/professionals" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    Professional
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/user-management/shops"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":24" == "/user-management/shops" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                    Shops
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/user-management/real-estate-agents"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":38" == "/user-management/real-estate-agents" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    Real Estate Agent
+                  </a>
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+
+            <!-- Listings Management Section -->
+            <li>
+              <button
+                type="button"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                aria-controls="listings-management"
+                data-collapse-toggle="listings-management"
+                aria-expanded="false"
+              >
+                <svg
+                  class="flex-shrink-0 w-6 h-6 text-gray-900 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  sidebar-toggle-item
+                >
+                  Listings
+                </span>
+                <svg
+                  sidebar-toggle-item
+                  class="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <ul
+                id="listings-management"
+                class="space-y-2 py-2 {% if current_path|slice:":10" != "/listings" %}hidden{% endif %}"
+              >
+                <li>
+                  <a
+                    href="/listings/chairs"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":15" == "/listings/chairs" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                      />
+                    </svg>
+                    Chair Listings
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/listings/properties"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":19" == "/listings/properties" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                      />
+                    </svg>
+                    Property Listings
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <!-- Tickets Section -->
+            <li>
+              <button
+                type="button"
+                class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                aria-controls="tickets-management"
+                data-collapse-toggle="tickets-management"
+                aria-expanded="false"
+              >
+                <svg
+                  class="flex-shrink-0 w-6 h-6 text-gray-900 transition duration-75 group-hover:text-gray-900 dark:text-white dark:group-hover:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+
+                <span
+                  class="flex-1 ml-3 text-left whitespace-nowrap"
+                  sidebar-toggle-item
+                >
+                  Tickets
+                </span>
+                <svg
+                  sidebar-toggle-item
+                  class="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+
+              <ul
+                id="tickets-management"
+                class="space-y-2 py-2 {% if current_path|slice:":9" != "/tickets" %}hidden{% endif %}"
+              >
+                <li>
+                  <a
+                    href="/tickets/categories"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":19" == "/tickets/categories" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                      />
+                    </svg>
+                    Category
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/tickets"
+                    class="text-base text-gray-900 rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75 pl-11 dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path == '/tickets' %}bg-gray-100 dark:bg-gray-700{% endif %}"
+                  >
+                    <svg
+                      class="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                      />
+                    </svg>
+                    Tickets
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <a
+                href="/faqs"
+                class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":5" == "/faqs" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+              >
+                <svg
+                  class="w-6 h-6 text-gray-800 dark:text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 18h.01M12 14a4 4 0 10-4-4m4 0v1m0 9a9 9 0 110-18 9 9 0 010 18z"
+                  />
+                </svg>
+
+                <span class="ml-3" sidebar-toggle-item>Faq</span>
+              </a>
+            </li>
+            {% endif %}
+
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <a
+                href="/pages"
+                class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":6" == "/pages" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+              >
+                <svg
+                  class="w-6 h-6 text-gray-800 dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 16h8M8 12h8m-6-8h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8l6-6z"
+                  />
+                </svg>
+
+                <span class="ml-3" sidebar-toggle-item>Pages</span>
+              </a>
+            </li>
+            {% endif %}
+
+            {% if show_all_menus or user.is_staff %}
+            <li>
+              <a
+                href="/settings"
+                class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 {% if current_path|slice:":9" == "/settings" %}bg-gray-100 dark:bg-gray-700{% endif %}"
+              >
+                <svg
+                  class="w-6 h-6 text-gray-800 dark:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M11.983 13.25a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09c.7 0 1.33-.4 1.51-1a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09c.7 0 1.33-.4 1.51-1V3a2 2 0 1 1 4 0v.09c0 .7.4 1.33 1 1.51a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09c0 .7.4 1.33 1 1.51h.09a2 2 0 1 1 0 4h-.09c-.7 0-1.33.4-1.51 1z"
+                  />
+                </svg>
+
+                <span class="ml-3" sidebar-toggle-item>Settings</span>
+              </a>
+            </li>
+            {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div
+  class="fixed inset-0 z-10 hidden bg-gray-900/50 dark:bg-gray-900/90"
+  id="sidebarBackdrop"
+></div>

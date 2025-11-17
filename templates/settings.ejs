@@ -1,0 +1,325 @@
+<div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+  <div class="mb-4 col-span-full xl:mb-2">
+    <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
+      Platform settings
+    </h1>
+  </div>
+  <!-- Right Content -->
+  <div class="col-span-full xl:col-auto">
+
+    <form action="/settings/site-logo" method="POST" enctype="multipart/form-data">
+      <div
+        class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+        <div class="items-center sm:flex xl:block 2xl:flex sm:space-x-4 xl:space-x-0 2xl:space-x-4">
+          <!-- Hidden File Input -->
+          <input type="file" name="site_logo" id="siteLogo" accept="image/*" class="hidden" required />
+
+          <!-- Clickable Image -->
+          <label for="siteLogo">
+            <img id="siteLogoPreview"
+              class="mb-4 rounded-lg w-28 h-28 object-cover cursor-pointer sm:mb-0 xl:mb-4 2xl:mb-0"
+              src="<%= site_logo || '/images/users/bonnie-green.png' %>" alt="Profile picture" />
+          </label>
+
+          <div>
+            <h3 class="mb-1 text-xl font-bold text-gray-900 dark:text-white">Site Logo <span class="text-red-500">*</span></h3>
+            <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">JPG, GIF or PNG. Max size of 800K (Required)</div>
+            <div class="flex items-center justify-center space-x-4">
+              <button type="submit"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                Upload
+
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+    <div
+      class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <h3 class="mb-4 text-xl font-semibold dark:text-white text-center">
+        Social links</h3>
+      <div class="flow-root">
+        <form action="/save-social-links" method="post">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div class="flex-1 min-w-0 pb-4">
+              <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                Facebook account
+              </span>
+              <input type="url" name="facebook" value="<%= settings.facebook || '' %>" placeholder=""
+                class="block w-full text-sm font-normal text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+            </div>
+
+            </li>
+
+            <li class="py-4">
+              <div class="flex-1 min-w-0">
+                <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                  Twitter account
+                </span>
+                <input name="twitter" type="url" placeholder="" value="<%= settings.twitter || '' %>"
+                  class="block w-full text-sm font-normal text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+              </div>
+
+            </li>
+            <li class="pt-4 pb-6">
+              <div class="flex-1 min-w-0">
+                <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                  Youtube account
+                </span>
+                <input name="youtube" type="url" value="<%= settings.youtube || '' %>" placeholder=""
+                  class="block w-full text-sm font-normal text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+              </div>
+
+            </li>
+            <li class="pt-4 pb-6">
+              <div class="flex-1 min-w-0">
+                <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                  Instagrom account
+                </span>
+                <input name="instagram" type="url" placeholder="" value="<%= settings.instagram || '' %>"
+                  class="block w-full text-sm font-normal text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+              </div>
+
+            </li>
+          </ul>
+          <div>
+            <button
+              class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <h3 class="mb-4 text-xl font-semibold dark:text-white">
+        Password information
+      </h3>
+      <form action="/change-password" method="post">
+        <div class="grid grid-cols-6 gap-6">
+          <div class="col-span-6 sm:col-span-3">
+            <label for="cpassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Current
+              password</label>
+            <input type="password" name="cpassword" id="cpassword"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="••••••••" required />
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New
+              password</label>
+            <input data-popover-target="popover-password" data-popover-placement="bottom" type="password"
+              name="newPassword" id="password"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="••••••••" required />
+            <div data-popover id="popover-password" role="tooltip"
+              class="absolute z-10 invisible inline-block text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+              <div class="p-3 space-y-2">
+                <h3 class="font-semibold text-gray-900 dark:text-white">
+                  Must have at least 8 characters
+                </h3>
+
+                <p>It’s better to have:</p>
+                <ul>
+                  <li class="flex items-center mb-1">
+                    Upper & lower case letters
+                  </li>
+                  <li class="flex items-center mb-1">A symbol (#$&)</li>
+                  <li class="flex items-center">
+                    A longer password (min. 8 chars.)
+                  </li>
+                </ul>
+              </div>
+              <div data-popper-arrow></div>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
+              password</label>
+            <input type="password" name="confirmPassword" id="confirm-password"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="••••••••" required />
+          </div>
+          <div class="col-span-6 sm:col-full">
+            <button
+              class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              type="submit">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-span-2">
+    <div
+      class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <h3 class="mb-4 text-xl font-semibold dark:text-white">
+        General information
+      </h3>
+      <form action="/settings/general" method="post">
+        <div class="grid grid-cols-6 gap-6">
+          <div class="col-span-6 sm:col-span-3">
+            <label for="app-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">App Name</label>
+            <input type="text" name="app_name" id="app-name" value="<%= settings.app_name || '' %>"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Bonnie" required />
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="support-email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Support
+              Email</label>
+            <input type="text" name="support_email" value="<%= settings.support_email || '' %>" id="support-email"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Green" required />
+          </div>
+
+          <div class="col-span-6 sm:col-span-3">
+            <label for="android_version" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Android
+              Version</label>
+            <input type="text" name="android_version""
+                value=" <%=settings.android_version || '' %>"
+            id="android_version"
+            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+            focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
+            dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            placeholder="e.g. San Francisco"
+            required
+            />
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="ios_version" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ios
+              Version</label>
+            <input type="text" name="ios_version""
+              id=" ios_version" value="<%= settings.ios_version || '' %>"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="e.g. California" required />
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="is_mantenence_mode"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mentance Mode</label>
+            <select name="is_mantenence_mode" id="is_mantenence_mode"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+              <option value="0" <% if (settings.is_mantenence_mode==0) { %> selected <% } %>>No</option>
+              <option value="1" <% if (settings.is_mantenence_mode==1) { %> selected <% } %>>Yes</option>
+            </select>
+
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="phone-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+              Number</label>
+            <input type="number" name="phone_number" value="<%= settings.phone_number || '' %>" id="phone-number"
+              class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="e.g. +(12)3456 789" required />
+          </div>
+
+
+
+
+          <div class="col-span-6 sm:col-full">
+            <button
+              class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              type="submit">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div
+      class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+      <div class="flow-root">
+        <h3 class="text-xl font-semibold dark:text-white">Active Sessions</h3>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% session?.forEach(function (session) { %>
+            <li class="py-4">
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <svg class="w-6 h-6 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
+                    <%= session?.location %>
+                      <%= session?.ipAddress %>
+                  </p>
+                  <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                    <%= session?.userAgent %>
+                  </p>
+                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <%= session?.createdAt %>
+                </div>
+                <div class="inline-flex items-center">
+                  <a href="/revoke-session/<%= session?.sessionId %>"
+                    class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Revoke</a>
+                </div>
+              </div>
+            </li>
+            <% }) %>
+        </ul>
+        <!-- <div>
+          <button
+            class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          >
+            See more
+          </button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function toggleSubscriptionPlan() {
+    const freeSubSelect = document.getElementById('free_subscription');
+    const planWrapper = document.getElementById('subscriptionPlanWrapper');
+
+    if (freeSubSelect.value === 'true') {
+      planWrapper.style.display = 'block';
+    } else {
+      planWrapper.style.display = 'none';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const freeSubSelect = document.getElementById('free_subscription');
+    const siteLogoForm = document.querySelector('form[action="/settings/site-logo"]');
+    const siteLogoInput = document.getElementById('siteLogo');
+    const siteLogoPreview = document.getElementById('siteLogoPreview');
+
+    toggleSubscriptionPlan();
+    freeSubSelect.addEventListener('change', toggleSubscriptionPlan);
+
+    // Site Logo validation
+    if (siteLogoForm) {
+      siteLogoForm.addEventListener('submit', function(e) {
+        if (!siteLogoInput.files || siteLogoInput.files.length === 0) {
+          e.preventDefault();
+          alert('Site Logo is required. Please select a file to upload.');
+          return false;
+        }
+      });
+    }
+
+    // Update preview when file is selected
+    if (siteLogoInput) {
+      siteLogoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            siteLogoPreview.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>

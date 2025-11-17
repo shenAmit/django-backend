@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # MongoDB is the primary database - no PostgreSQL needed
+  # MongoDB should be running separately or use MongoDB Atlas
+  
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - DEBUG=True
+      - MONGODB_URI=${MONGODB_URI:-mongodb://localhost:27017/open-chair}
+

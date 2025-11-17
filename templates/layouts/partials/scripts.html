@@ -1,0 +1,570 @@
+{% load static %}
+<script src="{% static 'app.bundle.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/datepicker.min.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"
+></script>
+{% if customScript %}
+<script src="{{ customScript }}"></script>
+{% endif %}
+<!-- Include CKEditor (CDN) -->
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Shop Type Management Script -->
+<script src="{% static 'js/admin/shopType.js' %}"></script>
+
+<!-- Amenity Management Script -->
+<script src="{% static 'js/admin/amenity.js' %}"></script>
+
+<!-- Profession Management Script -->
+<script src="{% static 'js/admin/profession.js' %}"></script>
+
+<!-- Service Management Script -->
+<script src="{% static 'js/admin/service.js' %}"></script>
+
+<!-- Professional Skill Management Script -->
+<script src="{% static 'js/admin/professionalSkill.js' %}"></script>
+
+<!-- User Management Script -->
+<script src="{% static 'js/admin/userManagement.js' %}"></script>
+
+<!-- Initialize CKEditor -->
+<script>
+  let editor;
+
+  // Initialize CKEditor when the page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('editor')) {
+      ClassicEditor
+        .create(document.querySelector('#editor'), {
+          toolbar: {
+            items: [
+              'heading',
+              '|',
+              'bold',
+              'italic',
+              'underline',
+              'link',
+              'bulletedList',
+              'numberedList',
+              '|',
+              'outdent',
+              'indent',
+              '|',
+              'blockQuote',
+              'insertTable',
+              'undo',
+              'redo'
+            ]
+          },
+          language: 'en',
+          table: {
+            contentToolbar: [
+              'tableColumn',
+              'tableRow',
+              'mergeTableCells'
+            ]
+          }
+        })
+        .then(editorInstance => {
+          editor = editorInstance;
+          
+          // Set initial content if present
+          const initialContent = document.querySelector('#editor').innerHTML;
+          if (initialContent && initialContent.trim() !== '') {
+            editor.setData(initialContent);
+          }
+        })
+        .catch(error => {
+          console.error('Error initializing CKEditor:', error);
+        });
+    }
+  });
+
+  // Before form submit, set value
+  $("form").on("submit", function () {
+    if (editor) {
+      $("#editor_content").val(editor.getData()); // Set hidden input with CKEditor content
+    }
+  });
+
+  // common delete function
+  let deleteUrl = null;
+  let deleteName = null;
+  let isDeleting = false; // Track if delete is in progress
+  window.isDeleting = false; // Make it globally accessible
+
+  // Step 1: Set URL when delete button is clicked
+  $(".delete-btn").on("click", function () {
+    if (isDeleting) return; // Prevent multiple clicks
+    
+    deleteUrl = $(this).data("delete-url") || $(this).data("url");
+    // Get item name if available
+    const nameElement = $(this).closest("tr").find("td").eq(1);
+    deleteName = nameElement ? nameElement.text().trim() : "";
+    
+    // Update permission name in modal if it's a permission delete
+    if ($(this).data("delete-url") && $(this).data("delete-url").includes("delete-permission")) {
+      const permissionNameElement = document.getElementById("deletePermissionName");
+      if (permissionNameElement && deleteName) {
+        permissionNameElement.textContent = deleteName;
+      }
+    }
+    
+    // Update role name in modal if it's a role delete
+    if ($(this).data("delete-url") && $(this).data("delete-url").includes("delete-role")) {
+      const roleNameElement = document.getElementById("deleteRoleName");
+      if (roleNameElement && deleteName) {
+        roleNameElement.textContent = deleteName;
+      }
+    }
+  });
+
+  // Step 2: Handle confirmation click for user delete
+  $("#confirm-delete-user").on("click", function () {
+    if (!deleteUrl || isDeleting) return; // Prevent multiple clicks
+    
+    const $deleteBtn = $(this);
+    
+    // Set loading state
+    isDeleting = true;
+    $deleteBtn.prop("disabled", true).addClass("opacity-50 cursor-not-allowed");
+
+    $.ajax({
+      url: deleteUrl,
+      type: "DELETE",
+      success: function () {
+        // Optional: Show success message or toast
+        location.reload();
+      },
+      error: function (xhr, status, error) {
+        console.error("Delete error:", error);
+        alert("Something went wrong.");
+        // Reset loading state on error
+        isDeleting = false;
+        window.isDeleting = false;
+        $deleteBtn.prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
+      },
+    });
+  });
+
+  // Handle permission delete
+  $("#confirmDeletePermission").on("click", function () {
+    if (!deleteUrl || isDeleting) return; // Prevent multiple clicks
+    
+    const $deleteBtn = $(this);
+    const $btnText = $deleteBtn.find(".delete-btn-text");
+    const $btnLoader = $deleteBtn.find(".delete-btn-loader");
+    
+    // Set loading state
+    isDeleting = true;
+    window.isDeleting = true;
+    $deleteBtn.prop("disabled", true).addClass("opacity-50 cursor-not-allowed");
+    $btnText.addClass("hidden");
+    $btnLoader.removeClass("hidden");
+
+    $.ajax({
+      url: deleteUrl,
+      type: "POST",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json",
+      },
+      success: function (response) {
+        if (response.status) {
+          $("#delete-permission-modal").addClass("hidden");
+          // Show success notification
+          const notification = document.createElement("div");
+          notification.className = "fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white";
+          notification.textContent = response.message || "Permission deleted successfully";
+          document.body.appendChild(notification);
+          setTimeout(() => {
+            notification.remove();
+            location.reload();
+          }, 1000);
+        } else {
+          alert(response.message || "Error deleting permission");
+          // Reset loading state on error
+          isDeleting = false;
+          window.isDeleting = false;
+          $deleteBtn.prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
+          $btnText.removeClass("hidden");
+          $btnLoader.addClass("hidden");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Delete error:", error);
+        const errorMsg = xhr.responseJSON?.message || "Something went wrong.";
+        alert(errorMsg);
+        // Reset loading state on error
+        isDeleting = false;
+        window.isDeleting = false;
+        $deleteBtn.prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
+        $btnText.removeClass("hidden");
+        $btnLoader.addClass("hidden");
+      },
+    });
+  });
+
+  // Handle role delete
+  $("#confirmDeleteRole").on("click", function () {
+    if (!deleteUrl || isDeleting) return; // Prevent multiple clicks
+    
+    const $deleteBtn = $(this);
+    const $btnText = $deleteBtn.find(".delete-btn-text");
+    const $btnLoader = $deleteBtn.find(".delete-btn-loader");
+    
+    // Set loading state
+    isDeleting = true;
+    window.isDeleting = true;
+    $deleteBtn.prop("disabled", true).addClass("opacity-50 cursor-not-allowed");
+    $btnText.addClass("hidden");
+    $btnLoader.removeClass("hidden");
+
+    $.ajax({
+      url: deleteUrl,
+      type: "POST",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json",
+      },
+      success: function (response) {
+        if (response.status) {
+          $("#delete-role-modal").addClass("hidden");
+          // Show success notification
+          const notification = document.createElement("div");
+          notification.className = "fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white";
+          notification.textContent = response.message || "Role deleted successfully";
+          document.body.appendChild(notification);
+          setTimeout(() => {
+            notification.remove();
+            location.reload();
+          }, 1000);
+        } else {
+          alert(response.message || "Error deleting role");
+          // Reset loading state on error
+          isDeleting = false;
+          window.isDeleting = false;
+          $deleteBtn.prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
+          $btnText.removeClass("hidden");
+          $btnLoader.addClass("hidden");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Delete error:", error);
+        const errorMsg = xhr.responseJSON?.message || "Something went wrong.";
+        alert(errorMsg);
+        // Reset loading state on error
+        isDeleting = false;
+        window.isDeleting = false;
+        $deleteBtn.prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
+        $btnText.removeClass("hidden");
+        $btnLoader.addClass("hidden");
+      },
+    });
+  });
+
+  // slug genrator
+  $(document).ready(function () {
+    function slugify(text) {
+      return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[\s\W-]+/g, "-") // Replace spaces and non-word chars with dashes
+        .replace(/^-+|-+$/g, ""); // Remove starting/ending dashes
+    }
+
+    $("#title").on("input", function () {
+      const slug = slugify($(this).val());
+      $("#slug").val(slug);
+    });
+  });
+
+  // Image Preview
+  $("#image").on("change", function () {
+    const file = this.files[0];
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+
+    if (file) {
+      if (!allowedTypes.includes(file.type)) {
+        $("#image-error")
+          .text("Only JPG, JPEG, and PNG files are allowed.")
+          .removeClass("hidden");
+
+        $("#preview-img").attr("src", "").addClass("hidden");
+
+        this.value = ""; // Reset file input
+        return;
+      }
+
+      // Clear any previous error
+      $("#image-error").text("").addClass("hidden");
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        $("#preview-img").attr("src", e.target.result).removeClass("hidden");
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      $("#preview-img").attr("src", "").addClass("hidden");
+      $("#image-error").text("").addClass("hidden");
+    }
+  });
+
+  // Multiple select 2
+  $(".select2").select2({
+    placeholder: "Select a option",
+    maximumSelectionLength: 100,
+  });
+
+  $(document).ready(function () {
+    $("#role").on("change", function () {
+      const selectedOption = $(this).find("option:selected");
+      const roleName = selectedOption.attr("role-name");
+      if (roleName == "User" || roleName == undefined) {
+        $("#password_section").hide();
+      } else {
+        $("#password_section").show();
+      }
+    });
+  });
+
+  $(document).ready(function () {
+    function toggleVideoInputs() {
+      const selectedOption = $("#video_type").find("option:selected");
+      const video_type = selectedOption.val();
+
+      if (video_type == "upload") {
+        $("#upload-video").show();
+        $("#youtube-url").hide();
+      } else if (video_type == "youtube_url") {
+        $("#youtube-url").show();
+        $("#upload-video").hide();
+      } else {
+        $("#upload-video").hide();
+        $("#youtube-url").hide();
+      }
+    }
+    toggleVideoInputs();
+
+    $("#video_type").on("change", function () {
+      const selectedOption = $(this).find("option:selected");
+      const video_type = selectedOption.val();
+      if (video_type == "upload") {
+        $("#upload-video").show();
+        $("#youtube-url").hide();
+      }
+      if (video_type == "youtube_url") {
+        $("#youtube-url").show();
+        $("#upload-video").hide();
+      }
+      if (video_type == "") {
+        $("#upload-video").hide();
+        $("#youtube-url").hide();
+      }
+    });
+  });
+
+  $("#gallery_image").on("change", function () {
+    const files = this.files;
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const previewContainer = $("#preview-gallery-images");
+    const errorContainer = $("#galley-image-error");
+
+    previewContainer.empty(); // Clear previous previews
+    errorContainer.text("").addClass("hidden");
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      if (!allowedTypes.includes(file.type)) {
+        errorContainer
+          .text("Only JPG, JPEG, and PNG files are allowed.")
+          .removeClass("hidden");
+        this.value = ""; // Reset file input
+        previewContainer.empty();
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageWrapper = $("<div>").addClass(
+          "relative inline-block mr-2 mb-2"
+        );
+
+        const closeBtn = $("<span>")
+          .html("&times;")
+          .addClass("absolute cursor-pointer z-10")
+          .css({
+            top: "0",
+            right: "0",
+            background: "red",
+            color: "white",
+            "font-size": "14px",
+            width: "20px",
+            height: "20px",
+            "line-height": "20px",
+            "text-align": "center",
+            "border-radius": "50%",
+            transform: "translate(50%, -50%)",
+          })
+          .on("click", function () {
+            imageWrapper.remove();
+          });
+
+        const img = $("<img>")
+          .attr("src", e.target.result)
+          .addClass("w-16 h-16 object-cover rounded-md border");
+
+        imageWrapper.append(img).append(closeBtn);
+        previewContainer.append(imageWrapper);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // append input box
+  $("#addInput").click(function (event) {
+    event.preventDefault(); // Prevent default form submission
+    const lastInput = $('#youtube-url input[name="youtube_url"]').last();
+
+    if (lastInput.length === 0 || lastInput.val().trim() !== "") {
+      $("#youtube-url").append(`
+      <div class="input-group mb-2">
+        <label for="youtube_url" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Youtube url</label>
+        <input type="url" name="youtube_url" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+       <button type="button" class="removeInput w-6 h-6 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+  </svg>
+</button>
+
+
+      </div>
+    `);
+    } else {
+      // alert('Please fill in the last URL field before adding a new one.');
+    }
+  });
+  // Remove input field
+  $(document).on("click", ".removeInput", function () {
+    $(this).closest(".input-group").remove();
+  });
+
+  $(document).ready(function () {
+    // GST Certificate preview
+    $("#gst_certificate").on("change", function () {
+      showPreview(this, "#gst-preview");
+    });
+
+    // PAN Card preview
+    $("#pan_card").on("change", function () {
+      showPreview(this, "#pan-preview");
+    });
+
+    $("#cancel_cheque").on("change", function () {
+      showPreview(this, "#cheque-previeww");
+    });
+
+    $("#profileImage").on("change", function () {
+      showPreview(this, "#profile-preview");
+    });
+
+    function showPreview(input, previewSelector) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          $(previewSelector).attr("src", e.target.result).removeClass("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        $(previewSelector).attr("src", "").addClass("hidden");
+      }
+    }
+  });
+
+  // append input box
+  $(document).ready(function () {
+    $("#ticket-container").on("click", ".add-row", function () {
+      const $container = $("#ticket-container");
+      let isValid = true;
+      $container.find("input").each(function () {
+        if ($(this).val().trim() === "") {
+          isValid = false;
+          $(this).addClass("border-red-500"); // Highlight empty field
+        } else {
+          $(this).removeClass("border-red-500"); // Remove highlight if filled
+        }
+      });
+      if (!isValid) {
+        alert("Please fill all fields before adding another row.");
+        return;
+      }
+
+      const $row = $(this).closest(".ticket-row");
+      const $newRow = $row.clone();
+
+      $newRow.find("input").val("");
+      $newRow.find(".add-row").addClass("hidden");
+      $newRow.find(".remove-row").removeClass("hidden");
+
+      $container.append($newRow);
+    });
+
+    $("#ticket-container").on("click", ".remove-row", function () {
+      $(this).closest(".ticket-row").remove();
+    });
+  });
+
+  // Remove input field
+  $(document).on("click", ".removeInput", function () {
+    $(this).closest(".input-group").remove();
+  });
+
+  // Handle profile picture image errors (CSP compliant)
+  document.addEventListener("DOMContentLoaded", function () {
+    const profileImages = document.querySelectorAll(".profile-picture-img");
+    profileImages.forEach(function (img) {
+      img.addEventListener("error", function () {
+        const fallback = this.getAttribute("data-fallback");
+        if (fallback && this.src !== fallback) {
+          this.src = fallback;
+        }
+      });
+    });
+  });
+
+  // Management page cancel button functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const cancelBtn = document.getElementById("cancelBtn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function () {
+        // Reset form or redirect
+        window.location.href = "/management";
+      });
+    }
+  });
+</script>
+<script>
+  const input = document.getElementById("siteLogo");
+  const preview = document.getElementById("siteLogoPreview");
+
+  if (input && preview) {
+    input.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+      }
+    });
+  }
+</script>
+

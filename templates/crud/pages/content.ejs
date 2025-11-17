@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= page.title %></title>
+    <%- include('../components/favicons') %>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+        line-height: 1.8;
+        color: #333;
+      }
+      
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 60px 50px;
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 20px;
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #4299e1;
+      }
+      
+      .page-content {
+        margin-top: 30px;
+        font-size: 1.05rem;
+        color: #4a5568;
+      }
+      
+      .page-content h1,
+      .page-content h2,
+      .page-content h3,
+      .page-content h4,
+      .page-content h5,
+      .page-content h6 {
+        color: #2d3748;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+      
+      .page-content h2 {
+        font-size: 1.75rem;
+        border-left: 4px solid #4299e1;
+        padding-left: 15px;
+        margin-top: 40px;
+      }
+      
+      .page-content h3 {
+        font-size: 1.5rem;
+        color: #4a5568;
+      }
+      
+      .page-content p {
+        margin-bottom: 20px;
+        text-align: justify;
+      }
+      
+      .page-content ul,
+      .page-content ol {
+        margin: 20px 0;
+        padding-left: 30px;
+      }
+      
+      .page-content li {
+        margin-bottom: 10px;
+      }
+      
+      .page-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .page-content a {
+        color: #4299e1;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s;
+      }
+      
+      .page-content a:hover {
+        border-bottom-color: #4299e1;
+      }
+      
+      .page-content blockquote {
+        border-left: 4px solid #cbd5e0;
+        padding-left: 20px;
+        margin: 20px 0;
+        font-style: italic;
+        color: #718096;
+      }
+      
+      .page-content code {
+        background: #f7fafc;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #e53e3e;
+      }
+      
+      .page-content pre {
+        background: #1a202c;
+        color: #f7fafc;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+      
+      .page-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      
+      .page-content table th,
+      .page-content table td {
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        text-align: left;
+      }
+      
+      .page-content table th {
+        background: #edf2f7;
+        font-weight: 600;
+      }
+      
+      @media (max-width: 768px) {
+        .container {
+          padding: 40px 30px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .page-content {
+          font-size: 1rem;
+        }
+        
+        body {
+          padding: 20px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1><%= page.title %></h1>
+
+      <!-- THIS is the key line: use ! to output HTML safely -->
+      <div class="page-content">
+        <%- page.content %>
+      </div>
+    </div>
+  </body>
+</html>
